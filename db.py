@@ -1,6 +1,5 @@
 import sqlite3
 
-
 DB = "tasks.db"
 
 def create_table():
@@ -17,18 +16,24 @@ def create_table():
     conn.commit()
     conn.close()
 
-def create_table():
+def create_task(title):
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS tasks(
-        id INTEGER PRIMARY KEY,
-        title TEXT,
-        done BOOLEAN
-    )               
-    """)
+        INSERT INTO tasks (title, done)
+        VALUES (?, ?)          
+    """,(title, False))
+    
+    task_id = cursor.lastrowid
+    
     conn.commit()
     conn.close()
+    
+    return {
+        "id": task_id,
+        "title": title,
+        "done": "False"
+    }
 
 def seed_tasks():
     conn = sqlite3.connect(DB)
@@ -61,7 +66,7 @@ def get_tasks():
     
     return tasks
 
-def get_tasks(id):
+def get_task(id):
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
     
