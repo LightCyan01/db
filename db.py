@@ -1,30 +1,73 @@
 import sqlite3
 
-conn = sqlite3.connect("tasks.db")
-cursor = conn.cursor()
 
-cursor.execute("""
+DB = "tasks.db"
+
+def create_table():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks(
         id INTEGER PRIMARY KEY,
         title TEXT,
         done BOOLEAN
     )               
-""")
+    """)
+    conn.commit()
+    conn.close()
 
-cursor.execute("SELECT COUNT(*) FROM tasks")
-count = cursor.fetchone()[0]
+def create_table():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS tasks(
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        done BOOLEAN
+    )               
+    """)
+    conn.commit()
+    conn.close()
 
-if count == 0:
-    example = [
-        ("Test 1", False),
-        ("Test 2", True),
-        ("Test 3", False)
-    ]
+def seed_tasks():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
     
-    cursor.executemany("""
-        INSERT INTO tasks (title, done)
-        VALUES (?, ?)                   
-    """, example)
+    cursor.execute("SELECT COUNT(*) FROM tasks")
+    count = cursor.fetchone()[0]
+    if count == 0:
+        example = [
+            ("Test 1", False),
+            ("Test 2", True),
+            ("Test 3", False)
+        ]
+        
+        cursor.executemany("""
+            INSERT INTO tasks (title, done)
+            VALUES (?, ?)                   
+        """, example)
+    conn.commit()
+    conn.close()
 
-conn.commit()
-conn.close()
+def get_tasks():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM tasks")
+    tasks = cursor.fetchall()
+
+    conn.close()
+    
+    return tasks
+
+def get_tasks(id):
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    
+    task = cursor.fetchone()
+    
+    conn.close()
+    return task
