@@ -1,9 +1,12 @@
-import sqlite3
+import os
+import psycopg
+from dotenv import load_dotenv
 
-DB = "tasks.db"
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def create_table():
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -17,7 +20,7 @@ def create_table():
     conn.close()
 
 def create_task(title):
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO tasks (title, done)
@@ -36,7 +39,7 @@ def create_task(title):
     }
     
 def update_task(id, title, done):
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("UPDATE tasks SET title = ?, done = ? WHERE id = ?",(title, done, id))
@@ -51,7 +54,7 @@ def update_task(id, title, done):
     return get_task(id)
     
 def delete_task(id):
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
@@ -66,7 +69,7 @@ def delete_task(id):
     return True
 
 def seed_tasks():
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("SELECT COUNT(*) FROM tasks")
@@ -86,7 +89,7 @@ def seed_tasks():
     conn.close()
 
 def get_tasks():
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("SELECT * FROM tasks")
@@ -97,7 +100,7 @@ def get_tasks():
     return tasks
 
 def get_task(id):
-    conn = sqlite3.connect(DB)
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
     cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
