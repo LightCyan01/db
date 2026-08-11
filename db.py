@@ -28,7 +28,7 @@ def create_task(title):
         RETURNING id          
     """,(title, False))
     
-    task_id = cursor.fetchone[0]
+    task_id = cursor.fetchone()[0]
     
     conn.commit()
     conn.close()
