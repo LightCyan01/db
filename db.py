@@ -24,10 +24,11 @@ def create_task(title):
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO tasks (title, done)
-        VALUES (%s, %s)          
+        VALUES (%s, %s)
+        RETURNING id          
     """,(title, False))
     
-    task_id = cursor.lastrowid
+    task_id = cursor.fetchone[0]
     
     conn.commit()
     conn.close()
@@ -35,7 +36,7 @@ def create_task(title):
     return {
         "id": task_id,
         "title": title,
-        "done": "False"
+        "done": False
     }
     
 def update_task(id, title, done):
