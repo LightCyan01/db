@@ -31,10 +31,10 @@ PUT     /tasks/{id}
 DELETE  /tasks/{id}
 ```
 
-## Example SQL
+## Example SQL used in Stage 4
 
 ```sql
-SELECT * FROM tasks;
+DELETE FROM tasks WHERE done = 1;
 ```
 
 ## Database Screenshots
