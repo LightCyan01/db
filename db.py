@@ -24,7 +24,7 @@ def create_task(title):
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO tasks (title, done)
-        VALUES (?, ?)          
+        VALUES (%s, %s)          
     """,(title, False))
     
     task_id = cursor.lastrowid
