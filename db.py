@@ -11,7 +11,7 @@ def create_table():
     
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks(
-        id INTEGER PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title TEXT,
         done BOOLEAN
     )               
@@ -42,7 +42,7 @@ def update_task(id, title, done):
     conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
-    cursor.execute("UPDATE tasks SET title = ?, done = ? WHERE id = ?",(title, done, id))
+    cursor.execute("UPDATE tasks SET title = %s, done = %s WHERE id = %s",(title, done, id))
     
     if cursor.rowcount == 0:
         conn.close()
@@ -57,7 +57,7 @@ def delete_task(id):
     conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
-    cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM tasks WHERE id = %s", (id,))
     
     if cursor.rowcount == 0:
         conn.close()
@@ -83,7 +83,7 @@ def seed_tasks():
         
         cursor.executemany("""
             INSERT INTO tasks (title, done)
-            VALUES (?, ?)                   
+            VALUES (%s, %s)                   
         """, example)
     conn.commit()
     conn.close()
@@ -103,7 +103,7 @@ def get_task(id):
     conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     
-    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    cursor.execute("SELECT * FROM tasks WHERE id = %s", (id,))
     
     task = cursor.fetchone()
     
