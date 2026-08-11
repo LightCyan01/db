@@ -1,46 +1,55 @@
-# FastAPI SQLite Task API
+# FastAPI PostgreSQL Task API
 
-A simple CRUD API built with FastAPI and SQLite.
+A simple CRUD API built with FastAPI, PostgreSQL, and Docker.
 
-## Why SQLite?
+PostgreSQL runs in a Docker container and stores task data in a persistent Docker volume.
 
-SQLite uses a single database file, requires no separate setup, and keeps data after the server restarts.
+## Setup
 
-The database is stored in `tasks.db` and is created automatically when the app starts. If the `tasks` table is empty, three example tasks are seeded automatically.
-
-## Run
+Copy the example environment file:
 
 ```powershell
-py -m pip install -r requirements.txt
-py -m uvicorn main:app --reload
+Copy-Item .env.example .env
+```
+
+Start the entire stack:
+
+```powershell
+docker compose up
 ```
 
 Swagger docs:
 
 ```text
-http://127.0.0.1:8000/docs
+http://localhost:3000/docs
+```
+
+## Environment
+
+See `.env.example` for the required environment variables.
+
+```env
+DATABASE_URL=postgres://postgres:dev@db:5432/tasks
 ```
 
 ## Endpoints
 
-```text
-GET     /tasks
-GET     /tasks/{id}
-POST    /tasks
-PUT     /tasks/{id}
-DELETE  /tasks/{id}
+| Method | Endpoint |
+|---|---|
+| GET | `/tasks` |
+| GET | `/tasks/{id}` |
+| POST | `/tasks` |
+| PUT | `/tasks/{id}` |
+| DELETE | `/tasks/{id}` |
+
+## Example Request
+
+```powershell
+curl.exe -i http://localhost:3000/tasks
 ```
 
-## Example SQL used in Stage 4
+## Database Screenshot
 
-```sql
-DELETE FROM tasks WHERE done = 1;
-```
+<a href="https://ibb.co/0p8qFN7t"><img src="https://i.ibb.co/fVBMnRgv/image-2026-08-11-082509146.png" alt="PostgreSQL tasks database screenshot" border="0"></a>
 
-## Database Screenshots
-
-[![Database screenshot 1](https://i.ibb.co/zWG3FG6Y/Untitled.jpg)](https://ibb.co/ZRWQSW2P)
-
-[![Database screenshot 2](https://i.ibb.co/Nn3jF2PW/Untitled1.jpg)](https://ibb.co/93vTpHLy)
-
-`tasks.db` can be added to `.gitignore` because the application recreates it automatically on a fresh start.
+The database is created automatically and three example tasks are seeded when the table is empty. Data persists across `docker compose down` and `docker compose up` because PostgreSQL uses a Docker volume.
