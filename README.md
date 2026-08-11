@@ -34,12 +34,12 @@ DATABASE_URL=postgres://postgres:dev@db:5432/tasks
 
 ## Endpoints
 
-| Method | Endpoint |
-|---|---|
-| GET | `/tasks` |
-| GET | `/tasks/{id}` |
-| POST | `/tasks` |
-| PUT | `/tasks/{id}` |
+| Method | Endpoint      |
+| ------ | ------------- |
+| GET    | `/tasks`      |
+| GET    | `/tasks/{id}` |
+| POST   | `/tasks`      |
+| PUT    | `/tasks/{id}` |
 | DELETE | `/tasks/{id}` |
 
 ## Example Request
@@ -47,6 +47,12 @@ DATABASE_URL=postgres://postgres:dev@db:5432/tasks
 ```powershell
 curl.exe -i http://localhost:3000/tasks
 ```
+
+## Storage
+
+This project previously used SQLite. The database layer was replaced with PostgreSQL using `psycopg`, while the FastAPI routes and API behavior stayed the same.
+
+Persistence was tested by creating a task, running `docker compose down`, starting the stack again with `docker compose up`, and confirming the task was still returned by `GET /tasks`.
 
 ## Database Screenshot
 
